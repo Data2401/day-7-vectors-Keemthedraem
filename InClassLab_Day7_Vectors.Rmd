@@ -1,6 +1,6 @@
 ---
 title: "In Class Lab"
-author: "Dr. Shoemaker"
+author: "Mateen Hakeem"
 date: "DATA 2401"
 output: html_document
 ---
@@ -19,6 +19,15 @@ knitr::opts_chunk$set(echo = TRUE)
 3. Add 1 to each element in `n` and print the result
 4. Create a vector `m` that contains the numbers 10 to 1 (in that order), in two different ways, neither of which is just typing "10, 9 , 8 ...".  Hint: use one of the helper functions we learned.
 5. Subtract `m` FROM `n`. Note the recycling!
+```{r}
+n <- 10:49
+length(n)
+n_plus_1 <- n + 1
+m1 <- 10:1
+m2 <- seq(10,1)
+n - m1
+
+```
 
 ### Set 2 
 
@@ -28,6 +37,12 @@ knitr::opts_chunk$set(echo = TRUE)
      + the x vector goes in the first argument, the y vector goes in the second argument
      + You'll need to add the argument `type = "l"` for a line. NOTE: That is a lower case "L", not a 1. 
 
+```{r}
+x_range <- seq(-5, 10, by = 0.1)
+sin_wave <- sin(x_range)
+plot(x_range, sin_wave, type = "l")
+
+```
 
 ### Set 3 
 
@@ -38,6 +53,16 @@ knitr::opts_chunk$set(echo = TRUE)
 5. Use indexing to access the 5th to the 8th numbers in your combined vector
 6. Use indexing to create a new vector that contains the first 3 elements and last 3 elements of your combined vector. 
 7. Bonus/extra: do the above in a way that would work no matter how long the vector is (as long as it's longer than 2 elements)
+
+```{r}
+first_nums <- 40:50
+next_nums <- seq(51, 60)
+combined <- c(first_nums, next_nums)
+combined[7]
+combined [5:8]
+c(combined[1:3], combined[(length(combined)-2):length(combined)])
+
+```
 
 ## In-Class Activities
 
@@ -50,7 +75,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 x <- c(3.2, NA, 4.1, 5.0, NA, 2.8)
-
+is.na(x)
+x_no_na <- x[!is.na(x)]
+x[is.na(x)] <- mean(x_no_na)
+x
 ```
 
 1. Logical indexing
@@ -64,7 +92,12 @@ x <- c(3.2, NA, 4.1, 5.0, NA, 2.8)
      * sum(is_a) (since TRUE counts as 1)
 
 ```{r}
-
+grades <- c(99, 77, 100, 91, 87, 72, 82, 94, 81)
+is_a <- grades >= 90
+grades[is_a]
+which(is_a)
+length(grades[is_a])
+sum(is_a)
 ```
 
 1.  Emperical probabilities
@@ -77,14 +110,21 @@ x <- c(3.2, NA, 4.1, 5.0, NA, 2.8)
 
 
 ```{r}
-
+set.seed(2401)
+rolls <- sample(1:6, size = 200, replace = TRUE)
+counts <- table(rolls)
+proportions <- counts / length(rolls)
+proportions
+names(which.max(counts))
 ```
 
 
 1. Write a *function* to simulate rolling a 6-sided die and returns the result.
 
 ```{r}
-
+roll_die <- function(){
+  sample(1:6, 1)
+}
 ```
 
 
@@ -92,7 +132,9 @@ x <- c(3.2, NA, 4.1, 5.0, NA, 2.8)
 1. Write a function to simulate rolling 2 6-sided dice that returns the sum of the rolls. 
 
 ```{r}
-
+roll_die <- function(){
+  sum(sample(1:6, 2, replace = TRUE))
+}
 
 ```
 
@@ -102,7 +144,26 @@ x <- c(3.2, NA, 4.1, 5.0, NA, 2.8)
 
 ```{r}
 # Your one-roll function goes here
-
+roll_winner <- function(name1, name2){
+  r1 <- roll_die()
+  r2 <- roll_die()
+if (r1 > r2) {
+  return(name1)
+} else if (r2 > r1){
+  return(name2)
+}else {
+  # reroll once
+  r1 <- roll_die()
+  r2 <- roll_die()
+if (r1 > r2){
+  return(name1)
+} else if (r2 > r1){
+  return(name2)
+}else{
+  return("draw")
+}
+}
+}
 ```
 
 
@@ -120,7 +181,23 @@ Process:
      * number of ties (sum(ties))
 
 ```{r}
-
+roll_15_winner <- function(name1, name2){
+  p1 <- sample(1:6, 15, replace = TRUE)
+  p2 <- sample(1:6, 15, replace = TRUE)
+  p1_wins <- p1 > p2
+  p2_wins <- p2 > p1
+  ties <- p1 == p2
+  cat("p1 wins:", sum(p1_wins), "\n")
+  cat("p2 wins:", sum(p2_wins), "\n")
+  cat("Ties:", sum(ties), "\n")
+  if (sum(p1_wins) > sum(p2_wins)) {
+    return(name1)
+  } else if (sum(p2_wins) > sum(p1_wins)) {
+    return(name2)
+  }else{
+    return("draw")
+  }
+}
 
 ```
 
@@ -129,5 +206,18 @@ Process:
 
 ```{r}
 # Your "cheating" function goes here
+cheating_roll_15 <- function(name1, name2){
+  p1 <- sample(1:6, 15, replace = TRUE, prob = c(1,1,2,2,3,3))
+  p2 <- sample(1:6, 15, replace = TRUE)
+  p1_wins <- p1 > p2
+  p2_wins <- p2 > p1
+  if (sum(p1_wins) > sum(p2_wins)) {
+    return(name1)
+  } else if (sum(p2_wins) > sum(p1_wins)){
+    return(name2)
+  }else{
+    return("draw")
+  }
+}
 ```
 
